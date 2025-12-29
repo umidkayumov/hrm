@@ -1,0 +1,8 @@
+{
+  "name": "Hrismi - Premium HR Dashboard",
+  "description": "A minimalist, premium HR SaaS dashboard for managing job applications and Telegram Web App forms.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
