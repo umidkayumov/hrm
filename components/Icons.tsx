@@ -22,7 +22,8 @@ import {
   Smartphone,
   Sparkles,
   Menu,
-  X
+  X,
+  Calendar
 } from 'lucide-react';
 
 export const Icons = {
@@ -49,5 +50,6 @@ export const Icons = {
   Mobile: Smartphone,
   AI: Sparkles,
   Menu: Menu,
-  Close: X
+  Close: X,
+  Calendar: Calendar
 };

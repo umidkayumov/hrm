@@ -8,6 +8,182 @@ interface TelegramViewProps {
   onExit: () => void;
 }
 
+const MONTHS = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December'
+];
+
+// Generate years from 1950 to current year
+const currentYear = new Date().getFullYear();
+const YEARS = Array.from({ length: currentYear - 1949 }, (_, i) => currentYear - i);
+
+interface MobileDatePickerProps {
+  value: string;
+  onChange: (date: string) => void;
+  placeholder?: string;
+}
+
+const MobileDatePicker: React.FC<MobileDatePickerProps> = ({ value, onChange, placeholder }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedYear, setSelectedYear] = useState(() => {
+    if (value) return parseInt(value.split('-')[0]);
+    return currentYear - 25; // Default to 25 years ago
+  });
+  const [selectedMonth, setSelectedMonth] = useState(() => {
+    if (value) return parseInt(value.split('-')[1]) - 1;
+    return 0;
+  });
+  const [selectedDay, setSelectedDay] = useState(() => {
+    if (value) return parseInt(value.split('-')[2]);
+    return 1;
+  });
+
+  const getDaysInMonth = (year: number, month: number) => {
+    return new Date(year, month + 1, 0).getDate();
+  };
+
+  const days = Array.from(
+    { length: getDaysInMonth(selectedYear, selectedMonth) }, 
+    (_, i) => i + 1
+  );
+
+  const handleConfirm = () => {
+    const month = String(selectedMonth + 1).padStart(2, '0');
+    const day = String(selectedDay).padStart(2, '0');
+    onChange(`${selectedYear}-${month}-${day}`);
+    setIsOpen(false);
+  };
+
+  const formatDisplayDate = (dateStr: string) => {
+    const date = new Date(dateStr + 'T00:00:00');
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setIsOpen(true)}
+        className="w-full px-4 py-3 rounded-xl bg-gray-50 border-0 text-left flex items-center gap-3 focus:ring-2 focus:ring-blue-500 transition-all"
+      >
+        <div className="p-2 rounded-lg bg-blue-100 text-blue-600">
+          <Icons.Calendar size={16} />
+        </div>
+        <span className={value ? 'text-slate-900 text-sm' : 'text-slate-400 text-sm'}>
+          {value ? formatDisplayDate(value) : placeholder || 'Select date'}
+        </span>
+      </button>
+
+      {/* Modal Overlay */}
+      {isOpen && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-end justify-center">
+          <div className="w-full max-w-[375px] bg-white rounded-t-3xl animate-in slide-in-from-bottom duration-300">
+            {/* Header */}
+            <div className="flex items-center justify-between p-4 border-b border-gray-100">
+              <button
+                type="button"
+                onClick={() => setIsOpen(false)}
+                className="text-slate-500 font-medium"
+              >
+                Cancel
+              </button>
+              <span className="font-semibold text-slate-900">Select Date</span>
+              <button
+                type="button"
+                onClick={handleConfirm}
+                className="text-blue-600 font-semibold"
+              >
+                Done
+              </button>
+            </div>
+
+            {/* Date Picker Wheels */}
+            <div className="flex gap-2 p-4">
+              {/* Month Selector */}
+              <div className="flex-1">
+                <label className="block text-xs font-semibold text-slate-400 uppercase mb-2 text-center">Month</label>
+                <div className="relative">
+                  <select
+                    value={selectedMonth}
+                    onChange={(e) => {
+                      setSelectedMonth(parseInt(e.target.value));
+                      // Adjust day if necessary
+                      const maxDays = getDaysInMonth(selectedYear, parseInt(e.target.value));
+                      if (selectedDay > maxDays) setSelectedDay(maxDays);
+                    }}
+                    className="w-full h-14 text-center text-lg font-medium bg-gray-50 rounded-xl border-2 border-gray-100 focus:border-blue-500 focus:ring-0 appearance-none cursor-pointer"
+                  >
+                    {MONTHS.map((month, index) => (
+                      <option key={month} value={index}>{month}</option>
+                    ))}
+                  </select>
+                  <Icons.Down className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={16} />
+                </div>
+              </div>
+
+              {/* Day Selector */}
+              <div className="w-20">
+                <label className="block text-xs font-semibold text-slate-400 uppercase mb-2 text-center">Day</label>
+                <div className="relative">
+                  <select
+                    value={selectedDay}
+                    onChange={(e) => setSelectedDay(parseInt(e.target.value))}
+                    className="w-full h-14 text-center text-lg font-medium bg-gray-50 rounded-xl border-2 border-gray-100 focus:border-blue-500 focus:ring-0 appearance-none cursor-pointer"
+                  >
+                    {days.map(day => (
+                      <option key={day} value={day}>{day}</option>
+                    ))}
+                  </select>
+                  <Icons.Down className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={16} />
+                </div>
+              </div>
+
+              {/* Year Selector */}
+              <div className="w-24">
+                <label className="block text-xs font-semibold text-slate-400 uppercase mb-2 text-center">Year</label>
+                <div className="relative">
+                  <select
+                    value={selectedYear}
+                    onChange={(e) => {
+                      setSelectedYear(parseInt(e.target.value));
+                      // Adjust day if necessary (for leap years)
+                      const maxDays = getDaysInMonth(parseInt(e.target.value), selectedMonth);
+                      if (selectedDay > maxDays) setSelectedDay(maxDays);
+                    }}
+                    className="w-full h-14 text-center text-lg font-medium bg-gray-50 rounded-xl border-2 border-gray-100 focus:border-blue-500 focus:ring-0 appearance-none cursor-pointer"
+                  >
+                    {YEARS.map(year => (
+                      <option key={year} value={year}>{year}</option>
+                    ))}
+                  </select>
+                  <Icons.Down className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={16} />
+                </div>
+              </div>
+            </div>
+
+            {/* Preview */}
+            <div className="px-4 pb-6">
+              <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl p-4 text-center text-white">
+                <p className="text-blue-100 text-xs mb-1">Selected Date</p>
+                <p className="text-xl font-bold">
+                  {MONTHS[selectedMonth]} {selectedDay}, {selectedYear}
+                </p>
+              </div>
+            </div>
+
+            {/* Safe area spacer */}
+            <div className="h-8"></div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
+
 const TelegramView: React.FC<TelegramViewProps> = ({ formTemplate, onSubmit, onExit }) => {
   const [formData, setFormData] = useState<Record<string, any>>({});
   const [currentStep, setCurrentStep] = useState(0);
@@ -86,6 +262,12 @@ const TelegramView: React.FC<TelegramViewProps> = ({ formTemplate, onSubmit, onE
                     placeholder={field.placeholder}
                     className="w-full px-4 py-3 rounded-xl bg-gray-50 border-0 text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-blue-500 transition-all text-sm resize-none"
                     onChange={(e) => handleInputChange(field.id, e.target.value)}
+                  />
+                ) : field.type === 'date' ? (
+                  <MobileDatePicker
+                    value={formData[field.id] || ''}
+                    onChange={(date) => handleInputChange(field.id, date)}
+                    placeholder={field.placeholder}
                   />
                 ) : field.type === 'photo' ? (
                   <div className="relative">

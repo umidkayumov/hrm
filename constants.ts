@@ -9,6 +9,7 @@ export const MOCK_FORM: FormTemplate = {
     { id: 'f_photo', type: 'photo', label: 'Profile Photo', required: true, isSystem: true },
     { id: 'f_name', type: 'text', label: 'Full Name', placeholder: 'e.g. Jane Doe', required: true },
     { id: 'f_email', type: 'text', label: 'Email Address', placeholder: 'jane@example.com', required: true },
+    { id: 'f_dob', type: 'date', label: 'Date of Birth', placeholder: 'Select your birth date', required: true },
     { id: 'f_exp', type: 'number', label: 'Years of Experience', placeholder: 'e.g. 5', required: true },
     { id: 'f_portfolio', type: 'text', label: 'Portfolio Link', placeholder: 'https://dribbble.com/janedoe', required: true },
     { id: 'f_bio', type: 'long_text', label: 'Short Bio', placeholder: 'Tell us a bit about yourself...', required: false },

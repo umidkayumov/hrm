@@ -3,7 +3,6 @@ import { Submission } from '../types';
 import { Icons } from './Icons';
 import { summarizeCandidate } from '../services/geminiService';
 import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 
 interface CandidateProfileProps {
   candidate: Submission;
@@ -24,52 +23,296 @@ const CandidateProfile: React.FC<CandidateProfileProps> = ({ candidate, onBack }
   };
 
   const handleDownloadPDF = async () => {
-    if (!pdfRef.current) return;
     setIsGeneratingPdf(true);
 
     try {
-      const element = pdfRef.current;
-      const canvas = await html2canvas(element, {
-        scale: 2, // Improve resolution
-        useCORS: true, // Allow loading cross-origin images (like picsum)
-        logging: false,
-        backgroundColor: '#ffffff'
-      });
-
-      const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF({
         orientation: 'portrait',
         unit: 'mm',
         format: 'a4'
       });
 
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = pdf.internal.pageSize.getHeight();
-      const imgWidth = canvas.width;
-      const imgHeight = canvas.height;
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
       
-      // Calculate height in pdf units ensuring aspect ratio
-      const imgHeightInPdf = (imgHeight * pdfWidth) / imgWidth;
+      // Colors
+      const primaryColor: [number, number, number] = [79, 70, 229]; // Indigo
+      const darkColor: [number, number, number] = [30, 41, 59]; // Slate 800
+      const grayColor: [number, number, number] = [100, 116, 139]; // Slate 500
+      const lightGray: [number, number, number] = [241, 245, 249]; // Slate 100
       
-      let heightLeft = imgHeightInPdf;
-      let position = 0;
-
-      // First page
-      pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeightInPdf);
-      heightLeft -= pdfHeight;
-
-      // Additional pages if content is long
-      while (heightLeft >= 0) {
-        position = heightLeft - imgHeightInPdf;
-        pdf.addPage();
-        pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeightInPdf);
-        heightLeft -= pdfHeight;
+      // Left sidebar
+      const sidebarWidth = 65;
+      pdf.setFillColor(...primaryColor);
+      pdf.rect(0, 0, sidebarWidth, pageHeight, 'F');
+      
+      // Logo/Brand text on sidebar
+      pdf.setTextColor(255, 255, 255);
+      pdf.setFontSize(22);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('HRISMI', 10, 20);
+      
+      pdf.setFontSize(7);
+      pdf.setFont('helvetica', 'normal');
+      pdf.text('HR Management System', 10, 26);
+      
+      // Profile photo
+      const photoX = sidebarWidth / 2 - 15;
+      const photoY = 35;
+      const photoSize = 30;
+      
+      // Try to load and add the actual photo
+      try {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        
+        await new Promise<void>((resolve, reject) => {
+          img.onload = () => {
+            // Create a canvas to clip image to circle
+            const size = Math.min(img.width, img.height);
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+            
+            if (ctx) {
+              // Create circular clipping path
+              ctx.beginPath();
+              ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
+              ctx.closePath();
+              ctx.clip();
+              
+              // Draw image centered
+              const offsetX = (img.width - size) / 2;
+              const offsetY = (img.height - size) / 2;
+              ctx.drawImage(img, -offsetX, -offsetY, img.width, img.height);
+              
+              const imgData = canvas.toDataURL('image/png');
+              
+              // Add the circular photo
+              pdf.addImage(imgData, 'PNG', photoX, photoY, photoSize, photoSize);
+            }
+            resolve();
+          };
+          img.onerror = () => reject(new Error('Failed to load image'));
+          img.src = candidate.photoUrl;
+        });
+      } catch (imgError) {
+        // Fallback to initials if image fails to load
+        console.log('Image load failed, using initials fallback');
+        pdf.setFillColor(255, 255, 255);
+        pdf.circle(sidebarWidth / 2, photoY + photoSize / 2, photoSize / 2, 'F');
+        
+        pdf.setTextColor(...primaryColor);
+        pdf.setFontSize(14);
+        pdf.setFont('helvetica', 'bold');
+        const initials = candidate.candidateName
+          .split(' ')
+          .map(n => n[0])
+          .join('')
+          .toUpperCase()
+          .slice(0, 2);
+        pdf.text(initials, sidebarWidth / 2 - 6, photoY + photoSize / 2 + 5);
+      }
+      
+      // Sidebar contact info
+      pdf.setTextColor(255, 255, 255);
+      pdf.setFontSize(9);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('CONTACT', 10, 90);
+      
+      pdf.setFont('helvetica', 'normal');
+      pdf.setFontSize(8);
+      
+      // Email
+      const emailLines = pdf.splitTextToSize(candidate.email, 50);
+      pdf.text(emailLines, 10, 100);
+      
+      // Role
+      pdf.setFont('helvetica', 'bold');
+      pdf.setFontSize(9);
+      pdf.text('POSITION', 10, 120);
+      
+      pdf.setFont('helvetica', 'normal');
+      pdf.setFontSize(8);
+      const roleLines = pdf.splitTextToSize(candidate.role, 50);
+      pdf.text(roleLines, 10, 128);
+      
+      // Experience
+      pdf.setFont('helvetica', 'bold');
+      pdf.setFontSize(9);
+      pdf.text('EXPERIENCE', 10, 148);
+      
+      pdf.setFont('helvetica', 'normal');
+      pdf.setFontSize(8);
+      pdf.text(`${candidate.answers['f_exp'] || 'N/A'} Years`, 10, 156);
+      
+      // Application Date
+      pdf.setFont('helvetica', 'bold');
+      pdf.setFontSize(9);
+      pdf.text('APPLIED', 10, 176);
+      
+      pdf.setFont('helvetica', 'normal');
+      pdf.setFontSize(8);
+      const appDate = new Date(candidate.submittedAt).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      });
+      pdf.text(appDate, 10, 184);
+      
+      // Status badge
+      pdf.setFont('helvetica', 'bold');
+      pdf.setFontSize(9);
+      pdf.text('STATUS', 10, 204);
+      
+      const statusColors: Record<string, [number, number, number]> = {
+        'new': [59, 130, 246],
+        'reviewed': [234, 179, 8],
+        'hired': [34, 197, 94],
+        'rejected': [239, 68, 68]
+      };
+      
+      pdf.setFillColor(...(statusColors[candidate.status] || [100, 116, 139]));
+      pdf.roundedRect(10, 208, 40, 12, 3, 3, 'F');
+      pdf.setTextColor(255, 255, 255);
+      pdf.setFontSize(8);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text(candidate.status.toUpperCase(), 20, 216);
+      
+      // Footer on sidebar
+      pdf.setTextColor(200, 200, 255);
+      pdf.setFontSize(7);
+      pdf.setFont('helvetica', 'normal');
+      pdf.text('Generated by Hrismi', 10, pageHeight - 15);
+      pdf.text(new Date().toLocaleDateString(), 10, pageHeight - 10);
+      
+      // ========== MAIN CONTENT AREA ==========
+      const contentX = sidebarWidth + 15;
+      const contentWidth = pageWidth - sidebarWidth - 25;
+      let currentY = 20;
+      
+      // Candidate Name
+      pdf.setTextColor(...darkColor);
+      pdf.setFontSize(28);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text(candidate.candidateName, contentX, currentY);
+      currentY += 8;
+      
+      // Title/Role subtitle
+      pdf.setTextColor(...grayColor);
+      pdf.setFontSize(12);
+      pdf.setFont('helvetica', 'normal');
+      pdf.text(candidate.role, contentX, currentY);
+      currentY += 15;
+      
+      // Divider line
+      pdf.setDrawColor(...lightGray);
+      pdf.setLineWidth(0.5);
+      pdf.line(contentX, currentY, pageWidth - 10, currentY);
+      currentY += 10;
+      
+      // AI Summary Section (if available)
+      if (summary) {
+        // Section header with icon
+        pdf.setFillColor(238, 242, 255); // Indigo 50
+        pdf.roundedRect(contentX, currentY - 4, contentWidth, 6, 1, 1, 'F');
+        
+        pdf.setTextColor(...primaryColor);
+        pdf.setFontSize(11);
+        pdf.setFont('helvetica', 'bold');
+        pdf.text('AI EXECUTIVE SUMMARY', contentX + 2, currentY);
+        currentY += 8;
+        
+        pdf.setTextColor(...darkColor);
+        pdf.setFontSize(9);
+        pdf.setFont('helvetica', 'normal');
+        const summaryLines = pdf.splitTextToSize(summary, contentWidth - 5);
+        pdf.text(summaryLines, contentX, currentY);
+        currentY += summaryLines.length * 4.5 + 10;
+      }
+      
+      // Application Answers Section
+      pdf.setFillColor(...lightGray);
+      pdf.roundedRect(contentX, currentY - 4, contentWidth, 6, 1, 1, 'F');
+      
+      pdf.setTextColor(...primaryColor);
+      pdf.setFontSize(11);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('APPLICATION DETAILS', contentX + 2, currentY);
+      currentY += 12;
+      
+      // Application answers
+      Object.entries(candidate.answers).forEach(([key, value]) => {
+        if (key === 'f_photo') return;
+        
+        // Check if we need a new page
+        if (currentY > pageHeight - 30) {
+          pdf.addPage();
+          currentY = 20;
+        }
+        
+        const label = key.replace('f_', '').replace(/_/g, ' ').toUpperCase();
+        
+        // Label
+        pdf.setTextColor(...grayColor);
+        pdf.setFontSize(8);
+        pdf.setFont('helvetica', 'bold');
+        pdf.text(label, contentX, currentY);
+        currentY += 5;
+        
+        // Value
+        pdf.setTextColor(...darkColor);
+        pdf.setFontSize(10);
+        pdf.setFont('helvetica', 'normal');
+        
+        const valueStr = String(value);
+        const valueLines = pdf.splitTextToSize(valueStr, contentWidth - 5);
+        pdf.text(valueLines, contentX, currentY);
+        currentY += valueLines.length * 4.5 + 8;
+      });
+      
+      // Skills/Tags Section (decorative)
+      if (currentY < pageHeight - 50) {
+        currentY += 5;
+        pdf.setFillColor(...lightGray);
+        pdf.roundedRect(contentX, currentY - 4, contentWidth, 6, 1, 1, 'F');
+        
+        pdf.setTextColor(...primaryColor);
+        pdf.setFontSize(11);
+        pdf.setFont('helvetica', 'bold');
+        pdf.text('TAGS', contentX + 2, currentY);
+        currentY += 12;
+        
+        // Sample tags based on answers
+        const tags = ['Candidate', candidate.status.charAt(0).toUpperCase() + candidate.status.slice(1)];
+        if (candidate.answers['f_exp']) {
+          const exp = Number(candidate.answers['f_exp']);
+          if (exp >= 5) tags.push('Senior');
+          else if (exp >= 3) tags.push('Mid-Level');
+          else tags.push('Junior');
+        }
+        
+        let tagX = contentX;
+        tags.forEach(tag => {
+          const tagWidth = pdf.getTextWidth(tag) + 8;
+          
+          pdf.setFillColor(...primaryColor);
+          pdf.roundedRect(tagX, currentY - 4, tagWidth, 8, 2, 2, 'F');
+          
+          pdf.setTextColor(255, 255, 255);
+          pdf.setFontSize(8);
+          pdf.setFont('helvetica', 'bold');
+          pdf.text(tag, tagX + 4, currentY + 1);
+          
+          tagX += tagWidth + 4;
+        });
       }
 
-      pdf.save(`${candidate.candidateName.replace(/\s+/g, '_')}_Profile.pdf`);
+      pdf.save(`${candidate.candidateName.replace(/\s+/g, '_')}_Resume.pdf`);
     } catch (error) {
       console.error('PDF Generation Error:', error);
-      alert('Failed to generate PDF. Please ensure all images are loaded and try again.');
+      alert('Failed to generate PDF. Please try again.');
     } finally {
       setIsGeneratingPdf(false);
     }

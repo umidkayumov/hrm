@@ -1,4 +1,4 @@
-export type FieldType = 'text' | 'number' | 'photo' | 'long_text';
+export type FieldType = 'text' | 'number' | 'photo' | 'long_text' | 'date';
 
 export interface FormField {
   id: string;

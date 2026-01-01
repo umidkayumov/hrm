@@ -12,12 +12,19 @@ const FormBuilder: React.FC<FormBuilderProps> = ({ template, onSave }) => {
   const [formTitle, setFormTitle] = useState(template.title);
 
   const addField = (type: FieldType) => {
+    const labelMap: Record<FieldType, string> = {
+      text: 'New Text Field',
+      number: 'New Number Field',
+      photo: 'New Photo Field',
+      long_text: 'New Long Text Field',
+      date: 'New Date Field'
+    };
     const newField: FormField = {
       id: `f_${Date.now()}`,
       type,
-      label: type === 'text' ? 'New Text Field' : type === 'number' ? 'New Number Field' : 'New Photo Field',
+      label: labelMap[type],
       required: false,
-      placeholder: 'Enter details...'
+      placeholder: type === 'date' ? 'Select date' : 'Enter details...'
     };
     setFields([...fields, newField]);
   };
@@ -104,6 +111,8 @@ const FormBuilder: React.FC<FormBuilderProps> = ({ template, onSave }) => {
                            {field.type === 'photo' && <Icons.Camera size={14} />}
                            {field.type === 'text' && <Icons.Forms size={14} />}
                            {field.type === 'number' && <span className="font-mono text-xs">123</span>}
+                           {field.type === 'date' && <Icons.Calendar size={14} />}
+                           {field.type === 'long_text' && <Icons.Forms size={14} />}
                            <span className="text-sm capitalize">{field.type.replace('_', ' ')}</span>
                         </div>
                       </div>
@@ -168,6 +177,12 @@ const FormBuilder: React.FC<FormBuilderProps> = ({ template, onSave }) => {
               label="Number" 
               onClick={() => addField('number')} 
               description="Age, Experience, Salary"
+            />
+            <ToolButton 
+              icon={<Icons.Calendar />} 
+              label="Date" 
+              onClick={() => addField('date')} 
+              description="Date of Birth, Start Date"
             />
              <div className="pt-4 mt-4 border-t border-gray-100">
                 <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Settings</h4>
