@@ -36,3 +36,28 @@ export interface StatMetric {
   trend: number;
   trendLabel: string;
 }
+
+export type CalendarEventType = 'interview' | 'leave' | 'shift' | 'event' | 'reminder';
+
+export interface CalendarEvent {
+  id: string;
+  title: string;
+  type: CalendarEventType;
+  start: string; // ISO date string
+  end: string;   // ISO date string
+  employeeId?: string;
+  candidateId?: string;
+  status?: 'pending' | 'approved' | 'rejected'; // For leave requests
+  description?: string;
+  location?: string;
+  teamId?: string;
+  color?: string; // Optional custom color override
+}
+
+export interface CalendarFilter {
+  type: CalendarEventType;
+  enabled: boolean;
+  label: string;
+  color: string;
+  icon: string;
+}

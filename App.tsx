@@ -6,7 +6,8 @@ import {
   ApplicantsPage, 
   FormBuilderPage, 
   CandidatePage, 
-  TelegramPage 
+  TelegramPage,
+  CalendarPage
 } from './pages';
 
 function AppLayout({ children }: { children: React.ReactNode }) {
@@ -57,6 +58,12 @@ function AppLayout({ children }: { children: React.ReactNode }) {
             onClick={() => handleNavigate('/builder')} 
           />
           <NavItem 
+            icon={<Icons.Calendar size={20} />} 
+            label="Calendar" 
+            active={isActive('/calendar')} 
+            onClick={() => handleNavigate('/calendar')} 
+          />
+          <NavItem 
             icon={<Icons.Mobile size={20} />} 
             label="Simulate Telegram" 
             active={isActive('/telegram')} 
@@ -93,6 +100,7 @@ function AppLayout({ children }: { children: React.ReactNode }) {
             <NavItem icon={<Icons.Dashboard />} label="Dashboard" active={isActive('/')} onClick={() => handleNavigate('/')} />
             <NavItem icon={<Icons.Candidates />} label="Applicants" active={isActive('/applicants')} onClick={() => handleNavigate('/applicants')} />
             <NavItem icon={<Icons.Forms />} label="Form Builder" active={isActive('/builder')} onClick={() => handleNavigate('/builder')} />
+            <NavItem icon={<Icons.Calendar />} label="Calendar" active={isActive('/calendar')} onClick={() => handleNavigate('/calendar')} />
             <NavItem icon={<Icons.Mobile />} label="Simulate App" active={isActive('/telegram')} onClick={() => handleNavigate('/telegram')} />
            </nav>
         </div>
@@ -133,6 +141,7 @@ function App() {
         <Route path="/" element={<AppLayout><DashboardPage /></AppLayout>} />
         <Route path="/applicants" element={<AppLayout><ApplicantsPage /></AppLayout>} />
         <Route path="/builder" element={<AppLayout><FormBuilderPage /></AppLayout>} />
+        <Route path="/calendar" element={<AppLayout><CalendarPage /></AppLayout>} />
         <Route path="/candidate/:id" element={<AppLayout><CandidatePage /></AppLayout>} />
       </Routes>
     </BrowserRouter>

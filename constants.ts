@@ -85,4 +85,60 @@ export const MOCK_SUBMISSIONS: Submission[] = [
       f_bio: 'Graphic designer looking to switch to product design.'
     }
   }
+];import { CalendarEvent, CalendarFilter, StatMetric } from './types';
+
+export const MOCK_CALENDAR_EVENTS: CalendarEvent[] = [
+  {
+    id: '1',
+    title: 'Sarah L. - Interview',
+    type: 'interview',
+    start: '2026-01-02T10:00:00Z',
+    end: '2026-01-02T11:00:00Z',
+    candidateId: 'c1',
+    description: 'Senior Frontend Engineer interview',
+    location: 'Google Meet',
+    color: '#3B82F6'
+  },
+  {
+    id: '2',
+    title: 'David K. - Sick Leave',
+    type: 'leave',
+    start: '2026-01-02T00:00:00Z',
+    end: '2026-01-04T23:59:59Z',
+    employeeId: 'e1',
+    status: 'approved',
+    description: 'Feeling unwell, flu symptoms.',
+    color: '#EF4444'
+  },
+  {
+    id: '3',
+    title: 'Morning Shift - Team A',
+    type: 'shift',
+    start: '2026-01-02T08:00:00Z',
+    end: '2026-01-02T16:00:00Z',
+    teamId: 't1',
+    description: 'Regular morning shift for backend team.',
+    color: '#10B981'
+  },
+  {
+    id: '4',
+    title: 'Company Townhall',
+    type: 'event',
+    start: '2026-01-03T15:00:00Z',
+    end: '2026-01-03T16:30:00Z',
+    description: 'Quarterly company updates.',
+    location: 'Main Hall / Zoom',
+    color: '#8B5CF6'
+  }
 ];
+
+export const CALENDAR_FILTERS: CalendarFilter[] = [
+  { type: 'interview', enabled: true, label: 'Interviews', color: '#3B82F6', icon: 'UserCircle' },
+  { type: 'leave', enabled: true, label: 'Leave', color: '#EF4444', icon: 'Plane' },
+  { type: 'shift', enabled: true, label: 'Shifts', color: '#10B981', icon: 'Clock' },
+  { type: 'event', enabled: true, label: 'Events', color: '#8B5CF6', icon: 'Calendar' },
+  { type: 'reminder', enabled: true, label: 'Reminders', color: '#F59E0B', icon: 'Bell' }
+];
+
+// Add other constants from the original file if needed, but keeping this focused on what's new for now.
+// Based on view_file output, I should probably append or merge these into the existing constants.ts if possible.
