@@ -4,3 +4,4 @@ export { default as FormBuilderPage } from './FormBuilderPage';
 export { default as CandidatePage } from './CandidatePage';
 export { default as TelegramPage } from './TelegramPage';
 export { CalendarPage } from './CalendarPage';
+export { default as LoginPage } from './LoginPage';

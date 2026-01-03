@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { Icons } from './components/Icons';
 import { 
   DashboardPage, 
@@ -7,12 +7,17 @@ import {
   FormBuilderPage, 
   CandidatePage, 
   TelegramPage,
-  CalendarPage
+  CalendarPage,
+  LoginPage
 } from './pages';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { ProtectedRoute } from './components/ProtectedRoute';
+import { LogOut } from 'lucide-react';
 
 function AppLayout({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
   const location = useLocation();
+  const { signOut, user } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const isActive = (path: string) => {
@@ -72,12 +77,21 @@ function AppLayout({ children }: { children: React.ReactNode }) {
         </nav>
 
         <div className="p-4 border-t border-gray-100">
-          <div className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 cursor-pointer transition-colors">
-            <img src="https://picsum.photos/id/64/100/100" alt="Admin" className="w-10 h-10 rounded-full object-cover" />
-            <div>
-              <p className="text-sm font-semibold text-slate-900">Alex Morgan</p>
-              <p className="text-xs text-slate-500">HR Admin</p>
+          <div className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 transition-colors group">
+            <div className="flex items-center gap-3">
+              <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.email}`} alt="User" className="w-10 h-10 rounded-full border border-slate-100" />
+              <div className="max-w-[100px] overflow-hidden">
+                <p className="text-sm font-semibold text-slate-900 truncate">{user?.email?.split('@')[0]}</p>
+                <p className="text-xs text-slate-500">HR Admin</p>
+              </div>
             </div>
+            <button 
+              onClick={() => signOut()}
+              className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
+              title="Sign Out"
+            >
+              <LogOut size={18} />
+            </button>
           </div>
         </div>
       </aside>
@@ -102,6 +116,13 @@ function AppLayout({ children }: { children: React.ReactNode }) {
             <NavItem icon={<Icons.Forms />} label="Form Builder" active={isActive('/builder')} onClick={() => handleNavigate('/builder')} />
             <NavItem icon={<Icons.Calendar />} label="Calendar" active={isActive('/calendar')} onClick={() => handleNavigate('/calendar')} />
             <NavItem icon={<Icons.Mobile />} label="Simulate App" active={isActive('/telegram')} onClick={() => handleNavigate('/telegram')} />
+            <button 
+              onClick={() => signOut()}
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-600 font-medium"
+            >
+              <LogOut size={20} />
+              Sign Out
+            </button>
            </nav>
         </div>
       )}
@@ -132,19 +153,22 @@ const NavItem = ({ icon, label, active, onClick }: { icon: React.ReactNode, labe
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* Telegram page has its own full-screen layout */}
-        <Route path="/telegram" element={<TelegramPage />} />
-        
-        {/* All other routes use the AppLayout */}
-        <Route path="/" element={<AppLayout><DashboardPage /></AppLayout>} />
-        <Route path="/applicants" element={<AppLayout><ApplicantsPage /></AppLayout>} />
-        <Route path="/builder" element={<AppLayout><FormBuilderPage /></AppLayout>} />
-        <Route path="/calendar" element={<AppLayout><CalendarPage /></AppLayout>} />
-        <Route path="/candidate/:id" element={<AppLayout><CandidatePage /></AppLayout>} />
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/telegram" element={<TelegramPage />} />
+          
+          <Route path="/" element={<ProtectedRoute><AppLayout><DashboardPage /></AppLayout></ProtectedRoute>} />
+          <Route path="/applicants" element={<ProtectedRoute><AppLayout><ApplicantsPage /></AppLayout></ProtectedRoute>} />
+          <Route path="/builder" element={<ProtectedRoute><AppLayout><FormBuilderPage /></AppLayout></ProtectedRoute>} />
+          <Route path="/calendar" element={<ProtectedRoute><AppLayout><CalendarPage /></AppLayout></ProtectedRoute>} />
+          <Route path="/candidate/:id" element={<ProtectedRoute><AppLayout><CandidatePage /></AppLayout></ProtectedRoute>} />
+          
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 

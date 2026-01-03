@@ -1,11 +1,13 @@
-import React, { useState, useMemo } from 'react';
-import { ChevronLeft, ChevronRight, Plus, Calendar as CalendarIcon } from 'lucide-react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { ChevronLeft, ChevronRight, Plus, Calendar as CalendarIcon, Loader2 } from 'lucide-react';
 import './Calendar.css';
 import { CalendarEvent, CalendarEventType } from '../../types';
-import { MOCK_CALENDAR_EVENTS, CALENDAR_FILTERS } from '../../constants';
+import { CALENDAR_FILTERS } from '../../constants';
 import { EventItem } from './EventItem';
 import { CalendarSidePanel } from './CalendarSidePanel';
 import { EventModal } from './EventModal';
+import { supabase } from '../../services/supabase';
+import { useAuth } from '../../contexts/AuthContext';
 
 type ViewMode = 'month' | 'week' | 'day' | 'agenda';
 
@@ -13,13 +15,73 @@ const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const HOURS = Array.from({ length: 24 }, (_, i) => i);
 
 export const Calendar: React.FC = () => {
+  const { user } = useAuth();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [viewMode, setViewMode] = useState<ViewMode>('week');
-  const [events, setEvents] = useState<CalendarEvent[]>(MOCK_CALENDAR_EVENTS);
+  const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [filters, setFilters] = useState(CALENDAR_FILTERS);
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalInitialData, setModalInitialData] = useState<Partial<CalendarEvent> | undefined>(undefined);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch events from Supabase
+  const fetchEvents = async () => {
+    if (!user) return;
+    setLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('calendar_events')
+        .select('*')
+        .eq('user_id', user.id);
+
+      if (error) throw error;
+      
+      // Transform Supabase snake_case to our camelCase interface if necessary
+      // For now we'll assume they match or transform them
+      const transformedEvents: CalendarEvent[] = data.map(item => ({
+        id: item.id,
+        title: item.title,
+        type: item.type,
+        start: item.start_time || item.start,
+        end: item.end_time || item.end,
+        description: item.description,
+        location: item.location,
+        color: item.color,
+        status: item.status,
+        employeeId: item.employee_id,
+        candidateId: item.candidate_id,
+        teamId: item.team_id
+      }));
+
+      setEvents(transformedEvents);
+    } catch (error) {
+      console.error('Error fetching events:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchEvents();
+
+    // Subscribe to changes
+    const channel = supabase
+      .channel('calendar_changes')
+      .on('postgres_changes', { 
+        event: '*', 
+        schema: 'public', 
+        table: 'calendar_events',
+        filter: `user_id=eq.${user?.id}`
+      }, () => {
+        fetchEvents();
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user]);
 
   const toggleFilter = (type: CalendarEventType) => {
     setFilters(prev => prev.map(f => f.type === type ? { ...f, enabled: !f.enabled } : f));
@@ -71,30 +133,75 @@ export const Calendar: React.FC = () => {
     });
   };
 
-  const handleStatusChange = (id: string, status: 'approved' | 'rejected') => {
-    setEvents(prev => prev.map(e => e.id === id ? { ...e, status } : e));
-    if (selectedEvent?.id === id) {
-      setSelectedEvent(prev => prev ? { ...prev, status } : null);
+  const handleStatusChange = async (id: string, status: 'approved' | 'rejected') => {
+    try {
+      const { error } = await supabase
+        .from('calendar_events')
+        .update({ status })
+        .eq('id', id);
+      
+      if (error) throw error;
+      
+      // Local update for immediate feedback (though subscription will also trigger fetch)
+      setEvents(prev => prev.map(e => e.id === id ? { ...e, status } : e));
+      if (selectedEvent?.id === id) {
+        setSelectedEvent(prev => prev ? { ...prev, status } : null);
+      }
+    } catch (error) {
+      console.error('Error updating status:', error);
     }
   };
 
-  const handleDelete = (id: string) => {
-    setEvents(prev => prev.filter(e => e.id !== id));
-    setSelectedEvent(null);
+  const handleDelete = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from('calendar_events')
+        .delete()
+        .eq('id', id);
+      
+      if (error) throw error;
+      
+      setEvents(prev => prev.filter(e => e.id !== id));
+      setSelectedEvent(null);
+    } catch (error) {
+      console.error('Error deleting event:', error);
+    }
   };
 
-  const handleSaveEvent = (data: Partial<CalendarEvent>) => {
-    if (data.id) {
-      setEvents(prev => prev.map(e => e.id === data.id ? { ...e, ...data } as CalendarEvent : e));
-    } else {
-      const newEvent: CalendarEvent = {
-        ...data,
-        id: Math.random().toString(36).substr(2, 9),
+  const handleSaveEvent = async (data: Partial<CalendarEvent>) => {
+    if (!user) return;
+    
+    try {
+      const eventData = {
+        title: data.title,
+        type: data.type,
+        start_time: data.start,
+        end_time: data.end,
+        description: data.description,
+        location: data.location,
+        user_id: user.id,
         color: CALENDAR_FILTERS.find(f => f.type === data.type)?.color || '#3B82F6',
-      } as CalendarEvent;
-      setEvents(prev => [...prev, newEvent]);
+        status: data.status || 'pending'
+      };
+
+      if (data.id) {
+        const { error } = await supabase
+          .from('calendar_events')
+          .update(eventData)
+          .eq('id', data.id);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase
+          .from('calendar_events')
+          .insert([eventData]);
+        if (error) throw error;
+      }
+      
+      setIsModalOpen(false);
+      fetchEvents(); // Refresh list
+    } catch (error) {
+      console.error('Error saving event:', error);
     }
-    setIsModalOpen(false);
   };
 
   const handleCellClick = (day: Date, hour: number) => {
@@ -125,7 +232,7 @@ export const Calendar: React.FC = () => {
     cell.classList.remove('drag-over');
   };
 
-  const onDrop = (e: React.DragEvent, day: Date, hour: number) => {
+  const onDrop = async (e: React.DragEvent, day: Date, hour: number) => {
     e.preventDefault();
     const cell = e.currentTarget as HTMLElement;
     cell.classList.remove('drag-over');
@@ -140,14 +247,27 @@ export const Calendar: React.FC = () => {
 
       const newStart = new Date(day);
       newStart.setHours(hour, originalStart.getMinutes(), 0, 0);
-      
       const newEnd = new Date(newStart.getTime() + duration);
 
-      setEvents(prev => prev.map(e => e.id === eventId ? {
-        ...e,
-        start: newStart.toISOString(),
-        end: newEnd.toISOString()
-      } : e));
+      try {
+        const { error } = await supabase
+          .from('calendar_events')
+          .update({
+            start_time: newStart.toISOString(),
+            end_time: newEnd.toISOString()
+          })
+          .eq('id', eventId);
+        
+        if (error) throw error;
+        
+        setEvents(prev => prev.map(e => e.id === eventId ? {
+          ...e,
+          start: newStart.toISOString(),
+          end: newEnd.toISOString()
+        } : e));
+      } catch (error) {
+        console.error('Error rescheduling event:', error);
+      }
     }
   };
 
@@ -207,7 +327,11 @@ export const Calendar: React.FC = () => {
         </aside>
 
         <main className="calendar-main">
-          {viewMode === 'week' ? (
+          {loading ? (
+            <div className="flex h-full items-center justify-center">
+              <Loader2 className="animate-spin text-primary-500" size={48} />
+            </div>
+          ) : viewMode === 'week' ? (
             <div className="week-grid">
               <div className="grid-header">
                 <div className="time-col"></div>
