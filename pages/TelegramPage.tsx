@@ -45,8 +45,28 @@ const TelegramPage: React.FC = () => {
     fetchLatestForm();
   }, [user]);
 
+  const fileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = error => reject(error);
+    });
+  };
+
   const handleFormSubmit = async (newSubmission: Submission) => {
     try {
+      let photoUrl = newSubmission.photoUrl;
+
+      // Handle local file uploads (which come as blob URLs from the simulation)
+      if (newSubmission.answers['f_photo'] instanceof File) {
+        try {
+          photoUrl = await fileToBase64(newSubmission.answers['f_photo'] as File);
+        } catch (e) {
+          console.error('Error converting photo to base64:', e);
+        }
+      }
+
       const { error } = await supabase
         .from('submissions')
         .insert([{
@@ -55,7 +75,7 @@ const TelegramPage: React.FC = () => {
           email: newSubmission.email,
           role: newSubmission.role,
           answers: newSubmission.answers,
-          photo_url: newSubmission.photoUrl.startsWith('blob:') ? null : newSubmission.photoUrl, // Ideally upload to storage, but for now skip blobs
+          photo_url: photoUrl.startsWith('blob:') ? null : photoUrl,
           status: 'new'
         }]);
 
@@ -70,7 +90,7 @@ const TelegramPage: React.FC = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-slate-900 flex items-center justify-center">
-        <Loader2 className="animate-spin text-cyan-400" size={48} />
+        <Loader2 className="animate-spin text-primary-400" size={48} />
       </div>
     );
   }
@@ -82,7 +102,7 @@ const TelegramPage: React.FC = () => {
         <p className="text-slate-400 mb-8">Create a form in the Form Builder first to simulate applications.</p>
         <button 
           onClick={() => navigate('/')}
-          className="px-6 py-3 bg-cyan-500 text-white rounded-2xl font-bold hover:bg-cyan-600 transition-all"
+          className="px-6 py-3 bg-primary-500 text-white rounded-2xl font-bold hover:bg-primary-600 transition-all"
         >
           Back to Dashboard
         </button>

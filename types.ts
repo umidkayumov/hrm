@@ -24,7 +24,7 @@ export interface Submission {
   photoUrl: string;
   role: string;
   email: string; // Extracted for convenience
-  answers: Record<string, string | number>;
+  answers: Record<string, any>;
   submittedAt: string; // ISO date
   status: 'new' | 'reviewed' | 'rejected' | 'hired';
   aiSummary?: string;
