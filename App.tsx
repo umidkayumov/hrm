@@ -12,6 +12,7 @@ import {
 } from './pages';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { CompanySwitcher } from './components/CompanySwitcher';
 import { LogOut } from 'lucide-react';
 
 function AppLayout({ children }: { children: React.ReactNode }) {
@@ -36,11 +37,9 @@ function AppLayout({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen bg-white flex font-sans">
       {/* Sidebar - Desktop */}
       <aside className="hidden md:flex w-64 flex-col bg-white border-r border-metal-50 sticky top-0 h-screen z-20">
-        <div className="p-8 flex items-center gap-3">
-          <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center text-white font-bold">
-            H
-          </div>
-          <span className="text-xl font-bold text-slate-800 tracking-tight">Hrismi</span>
+        <div className="px-4 pt-6 pb-2">
+          <CompanySwitcher />
+          <div className="mt-4 h-px bg-[rgb(241,243,249)]"></div>
         </div>
 
         <nav className="flex-1 px-4 space-y-2 mt-4">
