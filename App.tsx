@@ -33,9 +33,9 @@ function AppLayout({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex font-sans">
+    <div className="min-h-screen bg-white flex font-sans">
       {/* Sidebar - Desktop */}
-      <aside className="hidden md:flex w-64 flex-col bg-white border-r border-gray-100 sticky top-0 h-screen z-20">
+      <aside className="hidden md:flex w-64 flex-col bg-white border-r border-metal-50 sticky top-0 h-screen z-20">
         <div className="p-8 flex items-center gap-3">
           <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center text-white font-bold">
             H
@@ -76,8 +76,8 @@ function AppLayout({ children }: { children: React.ReactNode }) {
           />
         </nav>
 
-        <div className="p-4 border-t border-gray-100">
-          <div className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 transition-colors group">
+        <div className="p-4 border-t border-metal-50">
+          <div className="flex items-center justify-between p-3 rounded-xl hover:bg-slate-200/50 transition-colors group">
             <div className="flex items-center gap-3">
               <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.email}`} alt="User" className="w-10 h-10 rounded-full border border-slate-100" />
               <div className="max-w-[100px] overflow-hidden">
@@ -97,7 +97,7 @@ function AppLayout({ children }: { children: React.ReactNode }) {
       </aside>
 
       {/* Mobile Header */}
-      <div className="md:hidden fixed top-0 w-full bg-white border-b border-gray-100 z-30 p-4 flex items-center justify-between">
+      <div className="md:hidden fixed top-0 w-full bg-white border-b border-metal-50 z-30 p-4 flex items-center justify-between">
          <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center text-white font-bold">H</div>
             <span className="text-xl font-bold text-slate-800">Hrismi</span>
@@ -141,7 +141,7 @@ const NavItem = ({ icon, label, active, onClick }: { icon: React.ReactNode, labe
     className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
       active 
         ? 'bg-primary-50 text-primary-600 shadow-sm' 
-        : 'text-slate-500 hover:bg-gray-50 hover:text-slate-900'
+        : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
     }`}
   >
     <span className={`${active ? 'text-primary-600' : 'text-slate-400 group-hover:text-slate-600'}`}>
