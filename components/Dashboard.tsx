@@ -34,7 +34,7 @@ const Dashboard: React.FC<DashboardProps> = ({ submissions }) => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         
         {/* Recruitment Funnel */}
-        <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+        <div className="bg-white p-8 rounded-2xl shadow-sm border border-metal-50">
            <div className="flex items-center justify-between mb-8">
              <h3 className="font-bold text-slate-900">Recruitment Funnel</h3>
              <button className="text-slate-400 hover:text-slate-600"><Icons.More size={20} /></button>
@@ -49,7 +49,7 @@ const Dashboard: React.FC<DashboardProps> = ({ submissions }) => {
         </div>
 
         {/* Mock Application Trend Chart */}
-        <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 flex flex-col">
+        <div className="bg-white p-8 rounded-2xl shadow-sm border border-metal-50 flex flex-col">
             <div className="flex items-center justify-between mb-8">
              <h3 className="font-bold text-slate-900">Application Trends</h3>
              <div className="flex items-center gap-2">
@@ -80,8 +80,8 @@ const Dashboard: React.FC<DashboardProps> = ({ submissions }) => {
       </div>
 
       {/* Recent Activity Mini List (Optional filler for dashboard) */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-        <div className="p-6 border-b border-gray-100">
+      <div className="bg-white rounded-2xl shadow-sm border border-metal-50 overflow-hidden">
+        <div className="p-6 border-b border-metal-50">
            <h3 className="font-bold text-slate-900">Recent Activity Log</h3>
         </div>
         <div className="p-6">
@@ -107,7 +107,7 @@ const Dashboard: React.FC<DashboardProps> = ({ submissions }) => {
 };
 
 const StatCard = ({ label, value, icon, color, trend }: { label: string, value: number, icon: React.ReactNode, color: string, trend: number }) => (
-  <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+  <div className="bg-white p-6 rounded-2xl shadow-sm border border-metal-50">
     <div className="flex items-start justify-between mb-4">
        <div className={`p-3 rounded-xl ${color}`}>
          {React.cloneElement(icon as React.ReactElement, { size: 20 })}

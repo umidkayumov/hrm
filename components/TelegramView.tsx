@@ -44,7 +44,7 @@ const MobileDatePicker: React.FC<{ value: string; onChange: (date: string) => vo
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className="w-full px-5 py-4 rounded-2xl bg-white border border-slate-100 shadow-sm text-left flex items-center justify-between group active:scale-[0.99] transition-all"
+        className="w-full px-5 py-4 rounded-2xl bg-white border border-metal-50 shadow-sm text-left flex items-center justify-between group active:scale-[0.99] transition-all"
       >
         <span className={value ? 'text-slate-900 font-medium' : 'text-slate-300'}>
           {value ? formatDisplayDate(value) : 'Select date'}
@@ -55,7 +55,7 @@ const MobileDatePicker: React.FC<{ value: string; onChange: (date: string) => vo
       {isOpen && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-end justify-center p-4">
           <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl animate-in slide-in-from-bottom duration-300">
-            <div className="flex items-center justify-between p-5 border-b border-slate-50">
+            <div className="flex items-center justify-between p-5 border-b border-metal-50">
               <button type="button" onClick={() => setIsOpen(false)} className="text-slate-400 font-medium">Cancel</button>
               <span className="font-bold text-slate-800">Choose {label}</span>
               <button type="button" onClick={handleConfirm} className="text-cyan-500 font-bold px-4 py-1 bg-cyan-50 rounded-lg">Done</button>
@@ -135,7 +135,7 @@ const TelegramView: React.FC<TelegramViewProps> = ({ formTemplate, onSubmit, onE
            <div className="flex items-center gap-3 mb-4">
               <button 
                 onClick={onExit}
-                className="p-2 rounded-xl bg-white shadow-sm border border-slate-100 text-slate-400 hover:text-slate-900 active:scale-90 transition-all"
+                className="p-2 rounded-xl bg-white shadow-sm border border-metal-50 text-slate-400 hover:text-slate-900 active:scale-90 transition-all"
               >
                 <Icons.Close size={20} />
               </button>
@@ -148,7 +148,7 @@ const TelegramView: React.FC<TelegramViewProps> = ({ formTemplate, onSubmit, onE
         {/* Form Body */}
         <form onSubmit={handleSubmit} className="space-y-8">
            {/* Main Card */}
-           <div className="bg-white rounded-[40px] p-8 shadow-xl shadow-slate-200/50 border border-slate-50 space-y-8 animate-in fade-in slide-in-from-bottom duration-700 delay-200">
+           <div className="bg-white rounded-[40px] p-8 shadow-xl shadow-slate-200/50 border border-metal-50 space-y-8 animate-in fade-in slide-in-from-bottom duration-700 delay-200">
               
               {/* Photo Upload Section */}
               <div className="flex flex-col items-center gap-4 mb-4">
@@ -186,7 +186,7 @@ const TelegramView: React.FC<TelegramViewProps> = ({ formTemplate, onSubmit, onE
                           type={field.type === 'number' ? 'number' : 'text'}
                           placeholder={field.placeholder}
                           onChange={(e) => handleInputChange(field.id, e.target.value)}
-                          className="w-full px-5 py-4 rounded-2xl bg-white border border-slate-100 shadow-sm focus:ring-2 focus:ring-cyan-400/20 focus:border-cyan-400 outline-none font-medium text-slate-900 placeholder:text-slate-200 transition-all"
+                          className="w-full px-5 py-4 rounded-2xl bg-white border border-metal-50 shadow-sm focus:ring-2 focus:ring-cyan-400/20 focus:border-cyan-400 outline-none font-medium text-slate-900 placeholder:text-slate-200 transition-all"
                        />
                     </div>
                  ))}
@@ -209,7 +209,7 @@ const TelegramView: React.FC<TelegramViewProps> = ({ formTemplate, onSubmit, onE
                        rows={4}
                        placeholder={field.placeholder}
                        onChange={(e) => handleInputChange(field.id, e.target.value)}
-                       className="w-full px-5 py-4 rounded-[28px] bg-white border border-slate-100 shadow-sm focus:ring-2 focus:ring-cyan-400/20 focus:border-cyan-400 outline-none font-medium text-slate-900 placeholder:text-slate-200 transition-all resize-none"
+                       className="w-full px-5 py-4 rounded-[28px] bg-white border border-metal-50 shadow-sm focus:ring-2 focus:ring-cyan-400/20 focus:border-cyan-400 outline-none font-medium text-slate-900 placeholder:text-slate-200 transition-all resize-none"
                     />
                  </div>
               ))}

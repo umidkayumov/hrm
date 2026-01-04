@@ -76,7 +76,7 @@ const Applicants: React.FC<ApplicantsProps> = ({ submissions, onViewCandidate })
             <select 
               value={roleFilter}
               onChange={(e) => setRoleFilter(e.target.value)}
-              className="w-full appearance-none pl-4 pr-10 py-2.5 bg-white border border-gray-200 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary-100 focus:border-primary-500 transition-all text-slate-600 cursor-pointer hover:border-primary-200"
+              className="w-full appearance-none pl-4 pr-10 py-2.5 bg-white border border-metal-100 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary-100 focus:border-primary-500 transition-all text-slate-600 cursor-pointer hover:border-primary-200"
             >
               <option value="all">All Roles</option>
               {roles.map(role => (
@@ -94,19 +94,19 @@ const Applicants: React.FC<ApplicantsProps> = ({ submissions, onViewCandidate })
               placeholder="Search candidates..." 
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-100 focus:border-primary-500 w-full md:w-64 transition-all"
+              className="pl-10 pr-4 py-2.5 bg-white border border-metal-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-100 focus:border-primary-500 w-full md:w-64 transition-all"
             />
           </div>
           
-          <button className="hidden md:block p-2.5 bg-white border border-gray-200 rounded-xl text-slate-500 hover:text-primary-600 hover:border-primary-200 transition-colors">
+          <button className="hidden md:block p-2.5 bg-white border border-metal-100 rounded-xl text-slate-500 hover:text-primary-600 hover:border-primary-200 transition-colors">
             <Icons.Download size={20} />
           </button>
         </div>
       </div>
 
       {/* Main Table */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-        <div className="p-6 border-b border-gray-100 flex items-center justify-between flex-wrap gap-4">
+      <div className="bg-white rounded-2xl shadow-sm border border-metal-50 overflow-hidden">
+        <div className="p-6 border-b border-metal-50 flex items-center justify-between flex-wrap gap-4">
           <h2 className="font-semibold text-slate-900">All Applications</h2>
           <div className="flex gap-2 overflow-x-auto no-scrollbar">
             {(['all', 'new', 'reviewed', 'hired', 'rejected'] as const).map((status) => (
@@ -137,12 +137,12 @@ const Applicants: React.FC<ApplicantsProps> = ({ submissions, onViewCandidate })
                 <th className="px-6 py-4 text-right text-xs font-medium text-slate-400 uppercase tracking-wider">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-50">
+            <tbody className="divide-y divide-metal-50">
               {sortedSubmissions.map((sub) => (
                 <tr key={sub.id} className="hover:bg-gray-50/80 transition-colors group">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center gap-3">
-                      <img className="h-10 w-10 rounded-full object-cover border border-gray-100" src={sub.photoUrl} alt="" />
+                      <img className="h-10 w-10 rounded-full object-cover border border-metal-50" src={sub.photoUrl} alt="" />
                       <div>
                         <div className="text-sm font-medium text-slate-900">{sub.candidateName}</div>
                         <div className="text-xs text-slate-500">{sub.email}</div>

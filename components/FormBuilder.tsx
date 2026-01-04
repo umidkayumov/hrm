@@ -63,8 +63,8 @@ const FormBuilder: React.FC<FormBuilderProps> = ({ template, onSave }) => {
 
       <div className="flex gap-8 flex-1 min-h-0">
         {/* Left: Editor Canvas */}
-        <div className="flex-1 bg-white rounded-2xl shadow-sm border border-gray-100 flex flex-col overflow-hidden">
-          <div className="p-8 border-b border-gray-100 bg-gray-50/30">
+        <div className="flex-1 bg-white rounded-2xl shadow-sm border border-metal-50 flex flex-col overflow-hidden">
+          <div className="p-8 border-b border-metal-50 bg-gray-50/30">
             <input 
               type="text" 
               value={formTitle}
@@ -79,7 +79,7 @@ const FormBuilder: React.FC<FormBuilderProps> = ({ template, onSave }) => {
             {fields.map((field, index) => (
               <div 
                 key={field.id} 
-                className="group bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all relative"
+                className="group bg-white p-6 rounded-xl border border-metal-100 shadow-sm hover:shadow-md transition-all relative"
               >
                 {!field.isSystem && (
                   <button 
@@ -102,12 +102,12 @@ const FormBuilder: React.FC<FormBuilderProps> = ({ template, onSave }) => {
                           type="text" 
                           value={field.label}
                           onChange={(e) => updateField(field.id, { label: e.target.value })}
-                          className="w-full text-base font-medium border-b border-gray-200 focus:border-primary-500 focus:outline-none py-1 bg-transparent"
+                          className="w-full text-base font-medium border-b border-metal-100 focus:border-primary-500 focus:outline-none py-1 bg-transparent"
                         />
                       </div>
                       <div className="w-1/3">
                         <label className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1 block">Type</label>
-                        <div className="flex items-center gap-2 py-1 text-slate-600 bg-gray-50 px-3 rounded-lg border border-gray-100">
+                        <div className="flex items-center gap-2 py-1 text-slate-600 bg-gray-50 px-3 rounded-lg border border-metal-50">
                            {field.type === 'photo' && <Icons.Camera size={14} />}
                            {field.type === 'text' && <Icons.Forms size={14} />}
                            {field.type === 'number' && <span className="font-mono text-xs">123</span>}
@@ -125,7 +125,7 @@ const FormBuilder: React.FC<FormBuilderProps> = ({ template, onSave }) => {
                             type="checkbox" 
                             checked={field.required}
                             onChange={(e) => updateField(field.id, { required: e.target.checked })}
-                            className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                            className="rounded border-metal-200 text-primary-600 focus:ring-primary-500"
                           />
                           <span className="text-sm text-slate-600">Required field</span>
                         </label>
@@ -135,7 +135,7 @@ const FormBuilder: React.FC<FormBuilderProps> = ({ template, onSave }) => {
                               placeholder="Placeholder text..."
                               value={field.placeholder || ''}
                               onChange={(e) => updateField(field.id, { placeholder: e.target.value })}
-                              className="w-full text-sm border border-gray-200 rounded-lg px-3 py-1.5 focus:border-primary-500 focus:outline-none"
+                              className="w-full text-sm border border-metal-100 rounded-lg px-3 py-1.5 focus:border-primary-500 focus:outline-none"
                             />
                         </div>
                       </div>
@@ -150,14 +150,14 @@ const FormBuilder: React.FC<FormBuilderProps> = ({ template, onSave }) => {
               </div>
             ))}
 
-            <div className="h-20 border-2 border-dashed border-gray-200 rounded-xl flex items-center justify-center text-gray-400 bg-gray-50/50">
+            <div className="h-20 border-2 border-dashed border-metal-100 rounded-xl flex items-center justify-center text-gray-400 bg-gray-50/50">
               Drag fields here or click items on the right to add
             </div>
           </div>
         </div>
 
         {/* Right: Tools Panel */}
-        <div className="w-80 bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <div className="w-80 bg-white rounded-2xl shadow-sm border border-metal-50 p-6">
           <h3 className="font-semibold text-slate-900 mb-4">Form Components</h3>
           <div className="space-y-3">
             <ToolButton 
@@ -184,7 +184,7 @@ const FormBuilder: React.FC<FormBuilderProps> = ({ template, onSave }) => {
               onClick={() => addField('date')} 
               description="Date of Birth, Start Date"
             />
-             <div className="pt-4 mt-4 border-t border-gray-100">
+             <div className="pt-4 mt-4 border-t border-metal-50">
                 <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Settings</h4>
                 <div className="flex items-center justify-between">
                     <span className="text-sm text-slate-700">Form Active</span>
@@ -203,7 +203,7 @@ const FormBuilder: React.FC<FormBuilderProps> = ({ template, onSave }) => {
 const ToolButton = ({ icon, label, description, onClick }: { icon: React.ReactNode, label: string, description: string, onClick: () => void }) => (
   <button 
     onClick={onClick}
-    className="w-full text-left p-4 rounded-xl border border-gray-100 hover:border-primary-200 hover:bg-primary-50 transition-all group"
+    className="w-full text-left p-4 rounded-xl border border-metal-50 hover:border-primary-200 hover:bg-primary-50 transition-all group"
   >
     <div className="flex items-center gap-3 mb-1">
       <div className="text-slate-400 group-hover:text-primary-600 transition-colors">

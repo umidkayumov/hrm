@@ -333,7 +333,7 @@ const CandidateProfile: React.FC<CandidateProfileProps> = ({ candidate, onBack }
           <button 
             onClick={handleDownloadPDF}
             disabled={isGeneratingPdf}
-            className="flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-xl text-slate-700 font-medium hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-white"
+            className="flex items-center gap-2 px-4 py-2 border border-metal-100 rounded-xl text-slate-700 font-medium hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-white"
           >
             {isGeneratingPdf ? <div className="animate-spin text-xs">⌛</div> : <Icons.Download size={18} />}
             {isGeneratingPdf ? 'Generating...' : 'Download PDF'}
@@ -348,12 +348,12 @@ const CandidateProfile: React.FC<CandidateProfileProps> = ({ candidate, onBack }
       {/* Printable Area Wrapper */}
       <div ref={pdfRef} className="space-y-6">
         {/* Header Card */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+        <div className="bg-white rounded-2xl shadow-sm border border-metal-50 p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="flex items-center gap-6">
             <img 
               src={candidate.photoUrl} 
               alt={candidate.candidateName} 
-              className="w-24 h-24 rounded-full object-cover border-4 border-gray-50 shadow-sm"
+              className="w-24 h-24 rounded-full object-cover border-4 border-metal-50 shadow-sm"
               crossOrigin="anonymous" // Important for html2canvas
             />
             <div>
@@ -404,11 +404,11 @@ const CandidateProfile: React.FC<CandidateProfileProps> = ({ candidate, onBack }
             </div>
 
             {/* Application Data */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-              <div className="px-6 py-4 border-b border-gray-100">
+            <div className="bg-white rounded-2xl shadow-sm border border-metal-50 overflow-hidden">
+              <div className="px-6 py-4 border-b border-metal-50">
                 <h3 className="font-semibold text-slate-900">Application Answers</h3>
               </div>
-              <div className="divide-y divide-gray-50">
+              <div className="divide-y divide-metal-50">
                 {Object.entries(candidate.answers).map(([key, value]) => {
                   if (key === 'f_photo') return null; // Already shown
                   const label = key.replace('f_', '').replace(/_/g, ' ').toUpperCase(); 
@@ -429,7 +429,7 @@ const CandidateProfile: React.FC<CandidateProfileProps> = ({ candidate, onBack }
 
           {/* Right Col: Metadata */}
           <div className="space-y-6">
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+              <div className="bg-white rounded-2xl shadow-sm border border-metal-50 p-6">
                   <h3 className="font-semibold text-slate-900 mb-4 text-sm uppercase tracking-wide">Status History</h3>
                   <div className="space-y-6 relative before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-gray-100">
                       <TimelineItem 
@@ -445,9 +445,9 @@ const CandidateProfile: React.FC<CandidateProfileProps> = ({ candidate, onBack }
                   </div>
               </div>
 
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+              <div className="bg-white rounded-2xl shadow-sm border border-metal-50 p-6">
                   <h3 className="font-semibold text-slate-900 mb-4 text-sm uppercase tracking-wide">Attachments</h3>
-                  <div className="flex items-center gap-3 p-3 rounded-lg border border-gray-100 bg-gray-50">
+                  <div className="flex items-center gap-3 p-3 rounded-lg border border-metal-50 bg-gray-50">
                       <div className="bg-red-100 text-red-600 p-2 rounded-lg">
                           <Icons.Forms size={18} />
                       </div>
