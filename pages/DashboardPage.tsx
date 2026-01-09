@@ -57,15 +57,38 @@ const DashboardPage: React.FC = () => {
     fetchDashboardData();
   }, [user]);
 
-  if (loading) {
-    return (
-      <div className="flex h-full items-center justify-center">
-        <Loader2 className="animate-spin text-primary-500" size={48} />
+  // Show static header immediately for better LCP, only skeleton for dynamic content
+  return (
+    <div className="p-8 max-w-7xl mx-auto space-y-8">
+      {/* Header - renders immediately for good LCP */}
+      <div>
+        <h1 className="text-2xl font-bold text-slate-900">Analytics Dashboard</h1>
+        <p className="text-slate-500 mt-1">Overview of recruitment performance and statistics.</p>
       </div>
-    );
-  }
 
-  return <Dashboard submissions={submissions} />;
+      {loading ? (
+        // Skeleton loading state
+        <div className="space-y-8 animate-pulse">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            {[1, 2, 3, 4].map(i => (
+              <div key={i} className="bg-white p-6 rounded-2xl shadow-sm border border-metal-50">
+                <div className="h-10 w-10 bg-gray-200 rounded-xl mb-4"></div>
+                <div className="h-8 w-16 bg-gray-200 rounded mb-2"></div>
+                <div className="h-4 w-24 bg-gray-100 rounded"></div>
+              </div>
+            ))}
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="bg-white p-8 rounded-2xl shadow-sm border border-metal-50 h-64"></div>
+            <div className="bg-white p-8 rounded-2xl shadow-sm border border-metal-50 h-64"></div>
+          </div>
+        </div>
+      ) : (
+        <Dashboard submissions={submissions} />
+      )}
+    </div>
+  );
 };
+
 
 export default DashboardPage;

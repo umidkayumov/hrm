@@ -328,8 +328,33 @@ export const Calendar: React.FC = () => {
 
         <main className="calendar-main">
           {loading ? (
-            <div className="flex h-full items-center justify-center">
-              <Loader2 className="animate-spin text-primary-500" size={48} />
+            // Skeleton loading state - header already visible
+            <div className="week-grid">
+              <div className="grid-header">
+                <div className="time-col"></div>
+                {weekDays.map(day => (
+                  <div key={day.toISOString()} className={`day-col-header ${day.toDateString() === new Date().toDateString() ? 'today' : ''}`}>
+                    <span className="day-name">{DAYS[day.getDay()]}</span>
+                    <span className="day-number">{day.getDate()}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="grid-body animate-pulse">
+                {[0, 1, 2, 3, 4, 5, 6, 7].map(hour => (
+                  <div key={hour} className="hour-row">
+                    <div className="time-col">
+                      {hour + 8 > 12 ? hour + 8 - 12 : hour + 8} {hour + 8 >= 12 ? 'PM' : 'AM'}
+                    </div>
+                    {weekDays.map(day => (
+                      <div key={`${day.toISOString()}-${hour}`} className="day-hour-cell">
+                        {hour % 3 === 0 && day.getDay() % 2 === 1 && (
+                          <div className="h-6 bg-gray-200 rounded w-3/4"></div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
             </div>
           ) : viewMode === 'week' ? (
             <div className="week-grid">

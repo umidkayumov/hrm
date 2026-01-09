@@ -79,7 +79,7 @@ const FormBuilder: React.FC<FormBuilderProps> = ({ template, onSave }) => {
             {fields.map((field, index) => (
               <div 
                 key={field.id} 
-                className="group bg-white p-6 rounded-xl border border-metal-100 shadow-sm hover:shadow-md transition-all relative"
+                className="group bg-white p-6 rounded-xl border border-metal-50 shadow-sm hover:shadow-md transition-all relative"
               >
                 {!field.isSystem && (
                   <button 
@@ -102,7 +102,7 @@ const FormBuilder: React.FC<FormBuilderProps> = ({ template, onSave }) => {
                           type="text" 
                           value={field.label}
                           onChange={(e) => updateField(field.id, { label: e.target.value })}
-                          className="w-full text-base font-medium border-b border-metal-100 focus:border-primary-500 focus:outline-none py-1 bg-transparent"
+                          className="w-full text-base font-medium border-b border-metal-50 focus:border-primary-500 focus:outline-none py-1 bg-transparent"
                         />
                       </div>
                       <div className="w-1/3">
@@ -125,7 +125,7 @@ const FormBuilder: React.FC<FormBuilderProps> = ({ template, onSave }) => {
                             type="checkbox" 
                             checked={field.required}
                             onChange={(e) => updateField(field.id, { required: e.target.checked })}
-                            className="rounded border-metal-200 text-primary-600 focus:ring-primary-500"
+                            className="rounded border-metal-50 text-primary-600 focus:ring-primary-500"
                           />
                           <span className="text-sm text-slate-600">Required field</span>
                         </label>
@@ -135,7 +135,7 @@ const FormBuilder: React.FC<FormBuilderProps> = ({ template, onSave }) => {
                               placeholder="Placeholder text..."
                               value={field.placeholder || ''}
                               onChange={(e) => updateField(field.id, { placeholder: e.target.value })}
-                              className="w-full text-sm border border-metal-100 rounded-lg px-3 py-1.5 focus:border-primary-500 focus:outline-none"
+                              className="w-full text-sm border border-metal-50 rounded-lg px-3 py-1.5 focus:border-primary-500 focus:outline-none"
                             />
                         </div>
                       </div>
@@ -150,7 +150,7 @@ const FormBuilder: React.FC<FormBuilderProps> = ({ template, onSave }) => {
               </div>
             ))}
 
-            <div className="h-20 border-2 border-dashed border-metal-100 rounded-xl flex items-center justify-center text-gray-400 bg-gray-50/50">
+            <div className="h-20 border-2 border-dashed border-metal-50 rounded-xl flex items-center justify-center text-gray-400 bg-gray-50/50">
               Drag fields here or click items on the right to add
             </div>
           </div>

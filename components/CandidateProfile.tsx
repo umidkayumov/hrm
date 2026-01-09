@@ -333,7 +333,7 @@ const CandidateProfile: React.FC<CandidateProfileProps> = ({ candidate, onBack }
           <button 
             onClick={handleDownloadPDF}
             disabled={isGeneratingPdf}
-            className="flex items-center gap-2 px-4 py-2 border border-metal-100 rounded-xl text-slate-700 font-medium hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-white"
+            className="flex items-center gap-2 px-4 py-2 border border-metal-50 rounded-xl text-slate-700 font-medium hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-white"
           >
             {isGeneratingPdf ? <div className="animate-spin text-xs">⌛</div> : <Icons.Download size={18} />}
             {isGeneratingPdf ? 'Generating...' : 'Download PDF'}
@@ -373,7 +373,7 @@ const CandidateProfile: React.FC<CandidateProfileProps> = ({ candidate, onBack }
           <div className="lg:col-span-2 space-y-6">
             
             {/* AI Summary Section */}
-            <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-6 border border-indigo-100">
+            <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-6 border border-metal-50">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2 text-indigo-900 font-semibold">
                   <Icons.AI size={18} className="text-indigo-600" />
@@ -383,7 +383,7 @@ const CandidateProfile: React.FC<CandidateProfileProps> = ({ candidate, onBack }
                   <button 
                     onClick={handleGenerateSummary}
                     disabled={loadingSummary}
-                    className="text-xs bg-white/80 hover:bg-white text-indigo-600 px-3 py-1.5 rounded-lg border border-indigo-100 font-medium transition-all"
+                    className="text-xs bg-white/80 hover:bg-white text-indigo-600 px-3 py-1.5 rounded-lg border border-metal-50 font-medium transition-all"
                     data-html2canvas-ignore="true"
                   >
                     {loadingSummary ? 'Generating...' : 'Generate with Gemini'}
@@ -466,7 +466,7 @@ const CandidateProfile: React.FC<CandidateProfileProps> = ({ candidate, onBack }
 
 const TimelineItem = ({ date, title, active }: { date: string, title: string, active: boolean }) => (
     <div className="relative pl-8">
-        <div className={`absolute left-0 top-1.5 w-4 h-4 rounded-full border-2 ${active ? 'bg-primary-600 border-primary-600' : 'bg-white border-gray-300'}`}></div>
+        <div className={`absolute left-0 top-1.5 w-4 h-4 rounded-full border-2 ${active ? 'bg-primary-600 border-primary-600' : 'bg-white border-metal-50'}`}></div>
         <p className={`text-sm font-medium ${active ? 'text-slate-900' : 'text-slate-400'}`}>{title}</p>
         <p className="text-xs text-slate-400 mt-0.5">{date}</p>
     </div>

@@ -1,15 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { Icons } from './components/Icons';
-import { 
-  DashboardPage, 
-  ApplicantsPage, 
-  FormBuilderPage, 
-  CandidatePage, 
-  TelegramPage,
-  CalendarPage,
-  LoginPage
-} from './pages';
+const DashboardPage = React.lazy(() => import('./pages/DashboardPage'));
+const ApplicantsPage = React.lazy(() => import('./pages/ApplicantsPage'));
+const FormBuilderPage = React.lazy(() => import('./pages/FormBuilderPage'));
+const CandidatePage = React.lazy(() => import('./pages/CandidatePage'));
+const TelegramPage = React.lazy(() => import('./pages/TelegramPage'));
+const CalendarPage = React.lazy(() => import('./pages/CalendarPage').then(module => ({ default: module.CalendarPage })));
+const LoginPage = React.lazy(() => import('./pages/LoginPage'));
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { CompanySwitcher } from './components/CompanySwitcher';
@@ -36,7 +34,7 @@ function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-white flex font-sans">
       {/* Sidebar - Desktop */}
-      <aside className="hidden md:flex w-64 flex-col bg-white border-r border-metal-50 sticky top-0 h-screen z-20">
+      <aside className="hidden md:flex w-64 flex-col bg-[#f7f9fb] border-r border-metal-50 sticky top-0 h-screen z-20">
         <div className="px-4 pt-6 pb-2">
           <CompanySwitcher />
           <div className="mt-4 h-px bg-[rgb(241,243,249)]"></div>
@@ -78,10 +76,10 @@ function AppLayout({ children }: { children: React.ReactNode }) {
         <div className="p-4 border-t border-metal-50">
           <div className="flex items-center justify-between p-3 rounded-xl hover:bg-slate-200/50 transition-colors group">
             <div className="flex items-center gap-3">
-              <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.email}`} alt="User" className="w-10 h-10 rounded-full border border-slate-100" />
+              <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.email}`} alt="User" className="w-10 h-10 rounded-full border border-metal-50" />
               <div className="max-w-[100px] overflow-hidden">
-                <p className="text-sm font-semibold text-slate-900 truncate">{user?.email?.split('@')[0]}</p>
-                <p className="text-xs text-slate-500">HR Admin</p>
+                <p className="text-sm font-semibold text-[#3E4A60] truncate">{user?.email?.split('@')[0]}</p>
+                <p className="text-xs text-[#3E4A60]">HR Admin</p>
               </div>
             </div>
             <button 
@@ -140,10 +138,10 @@ const NavItem = ({ icon, label, active, onClick }: { icon: React.ReactNode, labe
     className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
       active 
         ? 'bg-primary-50 text-primary-600 shadow-sm' 
-        : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
+        : 'text-[#3E4A60] hover:bg-slate-50 hover:text-[#3E4A60]'
     }`}
   >
-    <span className={`${active ? 'text-primary-600' : 'text-slate-400 group-hover:text-slate-600'}`}>
+    <span className={`${active ? 'text-primary-600' : 'text-[#3E4A60] group-hover:text-[#3E4A60]'}`}>
       {icon}
     </span>
     <span className="font-medium text-sm">{label}</span>
@@ -154,18 +152,24 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/telegram" element={<TelegramPage />} />
-          
-          <Route path="/" element={<ProtectedRoute><AppLayout><DashboardPage /></AppLayout></ProtectedRoute>} />
-          <Route path="/applicants" element={<ProtectedRoute><AppLayout><ApplicantsPage /></AppLayout></ProtectedRoute>} />
-          <Route path="/builder" element={<ProtectedRoute><AppLayout><FormBuilderPage /></AppLayout></ProtectedRoute>} />
-          <Route path="/calendar" element={<ProtectedRoute><AppLayout><CalendarPage /></AppLayout></ProtectedRoute>} />
-          <Route path="/candidate/:id" element={<ProtectedRoute><AppLayout><CandidatePage /></AppLayout></ProtectedRoute>} />
-          
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+        <Suspense fallback={
+          <div className="flex items-center justify-center h-screen bg-gray-50">
+            <div className="w-10 h-10 border-4 border-primary-600 border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        }>
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/telegram" element={<TelegramPage />} />
+            
+            <Route path="/" element={<ProtectedRoute><AppLayout><DashboardPage /></AppLayout></ProtectedRoute>} />
+            <Route path="/applicants" element={<ProtectedRoute><AppLayout><ApplicantsPage /></AppLayout></ProtectedRoute>} />
+            <Route path="/builder" element={<ProtectedRoute><AppLayout><FormBuilderPage /></AppLayout></ProtectedRoute>} />
+            <Route path="/calendar" element={<ProtectedRoute><AppLayout><CalendarPage /></AppLayout></ProtectedRoute>} />
+            <Route path="/candidate/:id" element={<ProtectedRoute><AppLayout><CandidatePage /></AppLayout></ProtectedRoute>} />
+            
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Suspense>
       </BrowserRouter>
     </AuthProvider>
   );

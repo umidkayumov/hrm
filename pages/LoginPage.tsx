@@ -44,7 +44,7 @@ const LoginPage: React.FC = () => {
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-100 rounded-full blur-[120px] opacity-60 animate-pulse" style={{ animationDelay: '1s' }}></div>
 
       <div className="w-full max-w-md p-8 relative z-10">
-        <div className="bg-white/80 backdrop-blur-xl border border-white p-10 rounded-[32px] shadow-2xl shadow-slate-200/50">
+        <div className="bg-white/80 backdrop-blur-xl border border-metal-50 p-10 rounded-[32px] shadow-2xl shadow-slate-200/50">
           <div className="flex flex-col items-center mb-10">
             <div className="w-16 h-16 bg-primary-600 rounded-2xl flex items-center justify-center text-white mb-6 shadow-lg shadow-primary-200">
               <span className="text-3xl font-bold">H</span>
@@ -62,7 +62,7 @@ const LoginPage: React.FC = () => {
                   type="email" 
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-slate-50 border-none ring-1 ring-slate-100 focus:ring-2 focus:ring-primary-500 rounded-2xl py-4 pl-12 pr-4 text-slate-900 placeholder:text-slate-400 transition-all outline-none"
+                  className="w-full bg-slate-50 border-none ring-1 ring-metal-50 focus:ring-2 focus:ring-primary-500 rounded-2xl py-4 pl-12 pr-4 text-slate-900 placeholder:text-slate-400 transition-all outline-none"
                   placeholder="name@company.com"
                   required
                 />
@@ -77,7 +77,7 @@ const LoginPage: React.FC = () => {
                   type="password" 
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-slate-50 border-none ring-1 ring-slate-100 focus:ring-2 focus:ring-primary-500 rounded-2xl py-4 pl-12 pr-4 text-slate-900 placeholder:text-slate-400 transition-all outline-none"
+                  className="w-full bg-slate-50 border-none ring-1 ring-metal-50 focus:ring-2 focus:ring-primary-500 rounded-2xl py-4 pl-12 pr-4 text-slate-900 placeholder:text-slate-400 transition-all outline-none"
                   placeholder="••••••••"
                   required
                 />
@@ -109,7 +109,7 @@ const LoginPage: React.FC = () => {
             </button>
           </form>
 
-          <div className="mt-8 text-center pt-8 border-t border-slate-50">
+          <div className="mt-8 text-center pt-8 border-t border-metal-50">
             <button 
               onClick={() => setIsLogin(!isLogin)}
               className="text-slate-500 hover:text-primary-600 font-semibold text-sm transition-colors"

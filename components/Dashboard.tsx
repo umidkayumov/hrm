@@ -15,12 +15,8 @@ const Dashboard: React.FC<DashboardProps> = ({ submissions }) => {
   const rejected = submissions.filter(s => s.status === 'rejected').length;
 
   return (
-    <div className="p-8 max-w-7xl mx-auto space-y-8">
-      {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900">Analytics Dashboard</h1>
-        <p className="text-slate-500 mt-1">Overview of recruitment performance and statistics.</p>
-      </div>
+    <div className="space-y-8">
+
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">

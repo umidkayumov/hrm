@@ -62,21 +62,17 @@ const Applicants: React.FC<ApplicantsProps> = ({ submissions, onViewCandidate })
   });
 
   return (
-    <div className="p-8 max-w-7xl mx-auto space-y-8">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900">Applicants</h1>
-          <p className="text-slate-500 mt-1">Manage, review, and track all candidate applications.</p>
-        </div>
+    <div className="space-y-8">
         <div className="flex flex-col md:flex-row items-center gap-4">
           
           {/* Role Filter */}
           <div className="relative w-full md:w-auto">
+            <label htmlFor="role-filter" className="sr-only">Filter by role</label>
             <select 
+              id="role-filter"
               value={roleFilter}
               onChange={(e) => setRoleFilter(e.target.value)}
-              className="w-full appearance-none pl-4 pr-10 py-2.5 bg-white border border-metal-100 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary-100 focus:border-primary-500 transition-all text-slate-600 cursor-pointer hover:border-primary-200"
+              className="w-full appearance-none pl-4 pr-10 py-2.5 bg-white border border-metal-50 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary-100 focus:border-primary-500 transition-all text-slate-600 cursor-pointer hover:border-primary-200"
             >
               <option value="all">All Roles</option>
               {roles.map(role => (
@@ -94,15 +90,17 @@ const Applicants: React.FC<ApplicantsProps> = ({ submissions, onViewCandidate })
               placeholder="Search candidates..." 
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 pr-4 py-2.5 bg-white border border-metal-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-100 focus:border-primary-500 w-full md:w-64 transition-all"
+              className="pl-10 pr-4 py-2.5 bg-white border border-metal-50 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-100 focus:border-primary-500 w-full md:w-64 transition-all"
             />
           </div>
           
-          <button className="hidden md:block p-2.5 bg-white border border-metal-100 rounded-xl text-slate-500 hover:text-primary-600 hover:border-primary-200 transition-colors">
+          <button 
+            aria-label="Download applicants data"
+            className="hidden md:block p-2.5 bg-white border border-metal-50 rounded-xl text-slate-500 hover:text-primary-600 hover:border-primary-200 transition-colors"
+          >
             <Icons.Download size={20} />
           </button>
         </div>
-      </div>
 
       {/* Main Table */}
       <div className="bg-white rounded-2xl shadow-sm border border-metal-50 overflow-hidden">
@@ -131,10 +129,10 @@ const Applicants: React.FC<ApplicantsProps> = ({ submissions, onViewCandidate })
               <tr>
                 <SortableHeader label="Candidate" sortKey="candidateName" currentSort={sortConfig} onSort={handleSort} />
                 <SortableHeader label="Role" sortKey="role" currentSort={sortConfig} onSort={handleSort} />
-                <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Experience</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Experience</th>
                 <SortableHeader label="Submitted" sortKey="submittedAt" currentSort={sortConfig} onSort={handleSort} />
-                <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-4 text-right text-xs font-medium text-slate-400 uppercase tracking-wider">Action</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Status</th>
+                <th className="px-6 py-4 text-right text-xs font-semibold text-slate-600 uppercase tracking-wider">Action</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-metal-50">
@@ -195,7 +193,7 @@ const SortableHeader = ({ label, sortKey, currentSort, onSort }: {
   onSort: (key: SortKey) => void 
 }) => (
   <th 
-    className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider cursor-pointer hover:bg-gray-100 hover:text-slate-600 transition-colors select-none"
+    className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider cursor-pointer hover:bg-gray-100 hover:text-slate-800 transition-colors select-none"
     onClick={() => onSort(sortKey)}
   >
     <div className="flex items-center gap-1.5">

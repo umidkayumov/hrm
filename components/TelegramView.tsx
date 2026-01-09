@@ -159,7 +159,7 @@ const TelegramView: React.FC<TelegramViewProps> = ({ formTemplate, onSubmit, onE
                     />
                     <label 
                        htmlFor="f_photo"
-                       className="block w-32 h-32 rounded-[32px] bg-slate-50 border-2 border-dashed border-slate-200 cursor-pointer overflow-hidden transition-all hover:border-cyan-400 hover:bg-cyan-50/30 active:scale-95"
+                       className="block w-32 h-32 rounded-[32px] bg-slate-50 border-2 border-dashed border-metal-50 cursor-pointer overflow-hidden transition-all hover:border-cyan-400 hover:bg-cyan-50/30 active:scale-95"
                     >
                        {formData['f_photo'] ? (
                           <img src={URL.createObjectURL(formData['f_photo'])} className="w-full h-full object-cover" alt="Avatar" />

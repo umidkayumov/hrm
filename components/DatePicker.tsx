@@ -128,7 +128,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange, placeholder = 
           w-full flex items-center gap-3 px-4 py-3 rounded-xl border-2 text-left transition-all
           ${isOpen 
             ? 'border-primary-500 ring-4 ring-primary-100 bg-white' 
-            : 'border-gray-200 hover:border-gray-300 bg-gray-50 hover:bg-white'
+            : 'border-metal-50 hover:border-metal-50 bg-gray-50 hover:bg-white'
           }
         `}
       >
@@ -141,7 +141,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange, placeholder = 
       </button>
 
       {isOpen && (
-        <div className="absolute z-50 mt-2 w-80 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="absolute z-50 mt-2 w-80 bg-white rounded-2xl shadow-2xl border border-metal-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
           {/* Gradient header */}
           <div className="bg-gradient-to-r from-primary-500 to-primary-600 p-4 text-white">
             <div className="flex items-center justify-between mb-3">
@@ -212,7 +212,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange, placeholder = 
             </div>
 
             {/* Quick actions */}
-            <div className="flex gap-2 mt-4 pt-4 border-t border-gray-100">
+            <div className="flex gap-2 mt-4 pt-4 border-t border-metal-50">
               <button
                 onClick={() => {
                   const today = new Date();
